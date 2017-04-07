@@ -2,5 +2,5 @@ from django.conf.urls import url
 from server import views
 
 urlpatterns = [
-    url(r'^$', views.get_index),
+    url(r'^', views.get_index),
 ]
