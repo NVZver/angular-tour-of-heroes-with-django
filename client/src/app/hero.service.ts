@@ -23,28 +23,22 @@ export class HeroService {
     const url = this.heroesUrl + 'heroes/';
     return this.http.get(url)
       .toPromise()
-      .then(response => response.json().data as Hero[])
+      .then(response => JSON.parse(response.json().heroes) as Hero[])
       .catch(this.handlerError)
   }
 
   getHero(id: number): Promise<Hero> {
-    const url = `${this.heroesUrl}/${id}`;
+    const url = `${this.heroesUrl}hero/${id}/`;
     return this.http.get(url)
       .toPromise()
-      .then(response => response.json().data as Hero)
+      .then(response => response.json() as Hero)
       .catch(this.handlerError);
   }
 
   update(hero: Hero): Promise<Hero> {
-    const url = `${this.heroesUrl}/${hero.id}`;
-    const requestOptions = new RequestOptions({
-      headers: this.headers,
-      params: {
-        name: name
-      }
-    });
+    const url = `${this.heroesUrl}hero/${hero.id}/`;
     return this.http
-      .put(url, JSON.stringify(hero), requestOptions)
+      .put(url, JSON.stringify(hero), {headers: this.headers})
       .toPromise()
       .then(() => hero)
       .catch(this.handlerError)
@@ -59,11 +53,11 @@ export class HeroService {
       .catch(this.handlerError)
   }
 
-  delete(id: number): Promise<void> {
-    const url = `${this.heroesUrl}/${id}`;
+  delete(id: number): Promise<number> {
+    const url = `${this.heroesUrl}hero/${id}/`;
     return this.http.delete(url, {headers: this.headers})
       .toPromise()
-      .then(() => null)
+      .then(res => parseInt(res.json().deleted))
       .catch(this.handlerError)
   }
 }

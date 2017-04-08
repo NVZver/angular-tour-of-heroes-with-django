@@ -27,7 +27,9 @@ export class HeroesComponent implements OnInit {
 
   getHeroes(): void {
     this.heroService.getHeroes()
-      .then(heroes => this.heroes = heroes);
+      .then(heroes => {
+        this.heroes = heroes;
+      });
   }
 
   gotoDetail(): void {
@@ -49,8 +51,8 @@ export class HeroesComponent implements OnInit {
 
   delete(hero: Hero): void {
     this.heroService.delete(hero.id)
-      .then(() => {
-        this.heroes = this.heroes.filter(h => h !== hero);
+      .then(id => {
+        this.heroes = this.heroes.filter(h => h.id !== id);
         if (this.selectedHero === hero) {
           this.selectedHero = null;
         }

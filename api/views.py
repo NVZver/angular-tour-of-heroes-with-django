@@ -26,13 +26,20 @@ def get_heroes(request):
 @csrf_exempt
 def hero(request, id):
     if request.method == 'GET':
-        pass
+        hero = Hero.objects.get(id=id)
+        return JsonResponse({"id": hero.id, "name": hero.name})
 
     if request.method == 'PUT':
-        pass
+        params = json.loads(request.body.decode("utf-8"))
+        hero = Hero.objects.get(id=id)
+        hero.name = params['name']
+        hero.save()
+        return JsonResponse({"id": hero.id, "name": hero.name})
+
     if request.method == 'DELETE':
-        pass
-    return JsonResponse({})
+        Hero.objects.get(id=id).delete()
+        return JsonResponse({"status": 200, "deleted": id})
+    return JsonResponse({"status": "403"})
 
 
 @csrf_exempt
@@ -42,7 +49,7 @@ def hero_create(request):
         params = json.loads(request.body.decode("utf-8"))
         hero = Hero.objects.create(name=params['name'])
         args = {
-            'id': hero.id,
+            'id': int(hero.id),
             'name': hero.name
         }
     return JsonResponse(args)
